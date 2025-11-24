@@ -36,4 +36,20 @@ class WeatherService {
       throw Exception('Failed to load forecast data');
     }
   }
+
+  Future<WeatherResponse> fetchCurrentWeatherByLocation(String cityName) async {
+    final url = Uri.parse(
+      'https://api.weatherapi.com/v1/current.json?key=$apiKey&q=$cityName&aqi=no',
+    );
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      // trả về WeatherResponse từ JSON
+      return WeatherResponse.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load weather data');
+    }
+  }
+
 }
