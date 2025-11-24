@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:weather_app/data/models/forecast_day_model.dart';
 import 'package:weather_app/data/models/weather_model.dart';
@@ -107,83 +108,61 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 // Vị trí và thời gian
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            weather!.location.name,
-                            style: const TextStyle(
-                              fontSize: 28,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              shadows: [Shadow(color: Colors.black45, blurRadius: 8)],
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            formatDateTime(weather!.location.localtime),
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.white.withOpacity(0.8),
-                              shadows: [Shadow(color: Colors.black45, blurRadius: 4)],
-                            ),
-                          ),
-                        ],
+                    Text(
+                      weather!.location.name,
+                      style: const TextStyle(
+                        fontSize: 32,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        shadows: [Shadow(color: Colors.black45, blurRadius: 8)],
                       ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Icon(getWeatherIcon(weather!.current.condition.text), color: Colors.white, size: 32),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
-                const SizedBox(height: 40),
 
-                // Nhiệt độ chính
-                Text(
-                  '${weather!.current.tempC.round()}°',
-                  style: const TextStyle(
-                    fontSize: 96,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w300,
-                    shadows: [Shadow(color: Colors.black45, blurRadius: 12)],
-                  ),
-                ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 20),
+                SizedBox(height: 180, child: getWeatherAnimation(weather!.current.condition.text)),
+                Column(
+                  children: [
+                    Text(
+                      '${weather!.current.tempC.round()}°',
+                      style: const TextStyle(
+                        fontSize: 96,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w300,
+                        shadows: [Shadow(color: Colors.black45, blurRadius: 12)],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
 
-                // Mô tả thời tiết
-                Text(
-                  weather!.current.condition.text,
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white.withOpacity(0.9),
-                    fontWeight: FontWeight.w500,
-                    shadows: [Shadow(color: Colors.black45, blurRadius: 6)],
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 4),
-
-                // Cảm giác như
-                Text(
-                  'Cảm giác như ${weather!.current.feelslikeC.round()}°',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white.withOpacity(0.7),
-                    shadows: [Shadow(color: Colors.black45, blurRadius: 4)],
-                  ),
+                    Text(
+                      weather!.current.condition.text,
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white.withOpacity(0.9),
+                        fontWeight: FontWeight.w500,
+                        shadows: [Shadow(color: Colors.black45, blurRadius: 6)],
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Cảm giác như ${weather!.current.feelslikeC.round()}°',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white.withOpacity(0.7),
+                        shadows: [Shadow(color: Colors.black45, blurRadius: 4)],
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -192,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
         // Bottom sheet với thông tin chi tiết
         DraggableScrollableSheet(
-          initialChildSize: 0.4, // Tăng kích thước ban đầu để chứa forecast
+          initialChildSize: 0.4,
           minChildSize: 0.4,
           maxChildSize: 0.8,
           builder: (context, scrollController) {
@@ -228,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         const SizedBox(height: 16),
                         SizedBox(
-                          height: 140, // Chiều cao cố định cho horizontal list
+                          height: 150, // Chiều cao cố định cho horizontal list
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
                             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -255,7 +234,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
-                                    Icon(getWeatherIcon(day.day.condition.icon), color: Colors.white, size: 28),
+                                    getWeatherAnimation(day.day.condition.text),
                                     Text(
                                       '${day.day.maxTempC.round()}°',
                                       style: const TextStyle(
@@ -280,20 +259,20 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         const SizedBox(height: 16),
                         SizedBox(
-                          height: 140, // Chiều cao cố định cho horizontal list
+                          height: 150, // Chiều cao cố định cho horizontal list
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
                             padding: const EdgeInsets.symmetric(horizontal: 16),
                             itemCount: _getHourlyForecastCount(),
                             itemBuilder: (context, index) {
-                              final hour = forecast!.forecastDay[0].hour[index * 3];
+                              final hour = forecast!.forecastDay[0].hour[index * 2];
                               return Container(
                                 width: 80,
                                 margin: const EdgeInsets.symmetric(horizontal: 8),
                                 padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
                                 decoration: BoxDecoration(
                                   color: Colors.white.withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(20),
+                                  borderRadius: BorderRadius.circular(50),
                                   border: Border.all(color: Colors.white.withOpacity(0.2)),
                                 ),
                                 child: Column(
@@ -307,7 +286,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
-                                    Icon(getWeatherIcon(hour.condition.text), color: Colors.white, size: 28),
+                                    getWeatherAnimation(hour.condition.text),
                                     Text(
                                       '${hour.tempC.round()}°',
                                       style: const TextStyle(
@@ -439,7 +418,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     final totalHours = forecast!.forecastDay[0].hour.length;
-    return (totalHours / 3).ceil().clamp(0, 8);
+    return (totalHours / 2).ceil().clamp(0, 12);
   }
 
   int _getDayForecastCount() {
