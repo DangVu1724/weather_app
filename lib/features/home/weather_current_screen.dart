@@ -6,10 +6,12 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:weather_app/data/models/forecast_day_model.dart';
 import 'package:weather_app/data/models/weather_model.dart';
 import 'package:weather_app/features/home/list_weather_city.dart';
+import 'package:weather_app/services/grod_service.dart';
 import 'package:weather_app/services/location_service.dart';
 import 'package:weather_app/services/weather_service.dart';
 import 'package:weather_app/utils/getTime.dart';
 import 'package:weather_app/utils/weather_translate.dart';
+import 'package:weather_app/widgets/clothing_suggestion_widget.dart';
 import 'package:weather_app/widgets/info_widget.dart';
 import 'package:weather_app/widgets/weatherBackground.dart';
 
@@ -209,6 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
             return AnimatedBuilder(
               animation: scrollController,
               builder: (context, child) {
+              
                 return Container(
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.08 + (0.07 * progress)),
@@ -311,8 +314,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     ),
                                   ),
-
-                                  const SizedBox(height: 40),
+                                  const SizedBox(height: 20),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                                    child: ClothingSuggestionWidget(
+                                      cityName: weather!.location.name,
+                                      temperatureC: weather!.current.tempC,
+                                      feelingTemp: weather!.current.feelslikeC,
+                                      weatherCondition: weather!.current.condition.text,
+                                      timeOfDay: timeOfDay,
+                                      humidity: weather!.current.humidity,
+                                      cloud: weather!.current.cloud,
+                                      windSpeedKph: weather!.current.windKph,
+                                      uv: weather!.current.uv,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 30),
                                 ],
                               ),
                             ),
